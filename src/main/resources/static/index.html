@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes fleurs</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #fdf3f6; margin: 0; padding: 20px; color: #333; }
+        h1 { color: #c2185b; }
+        h2 { color: #ad1457; margin-top: 30px; }
+        .bloc { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f8bbd0; }
+        input, select, button { padding: 6px; margin: 3px; }
+        button { background: #c2185b; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #ad1457; }
+        #message { color: #b71c1c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h1> Mes fleurs</h1>
+<p id="message"></p>
+
+
+<div class="bloc">
+    <h2 id="titreFormulaire">Ajouter une fleur</h2>
+    <input type="hidden" id="idFleur">
+    <input id="nom" placeholder="Nom">
+    <input id="couleur" placeholder="Couleur">
+    <select id="saison">
+        <option>PRINTEMPS</option>
+        <option>ETE</option>
+        <option>AUTOMNE</option>
+        <option>HIVER</option>
+    </select>
+    <input id="prix" type="number" step="0.1" placeholder="Prix">
+    <input id="stock" type="number" placeholder="Stock">
+    <input id="arrosage" placeholder="Arrosage">
+    <input id="soleil" placeholder="Soleil">
+    <select id="fournisseur"></select>
+    <button onclick="enregistrer()">Enregistrer</button>
+    <button onclick="viderFormulaire()">Annuler</button>
+</div>
+
+<div class="bloc">
+    <h2>Rechercher</h2>
+    <input id="rechercheCouleur" placeholder="Couleur (ex : rouge)">
+    <button onclick="chercherParCouleur()">Par couleur</button>
+    <input id="rechercheNom" placeholder="Nom (ex : ro)">
+    <button onclick="chercherParNom()">Par nom</button>
+    <input id="recherchePrix" type="number" placeholder="Prix max">
+    <button onclick="chercherParPrix()">Prix maximum</button>
+    <button onclick="chargerFleurs()">Tout afficher</button>
+</div>
+
+<div class="bloc">
+    <h2>Liste des fleurs</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom</th><th>Couleur</th><th>Saison</th><th>Prix</th><th>Stock</th>
+            <th>Arrosage</th><th>Soleil</th><th>Fournisseur</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="tableauFleurs"></tbody>
+    </table>
+</div>
+
+<div class="bloc">
+    <h2>Statistiques par saison</h2>
+    <table>
+        <thead>
+        <tr><th>Saison</th><th>Nombre de fleurs</th><th>Stock total</th><th>Prix moyen</th></tr>
+        </thead>
+        <tbody id="tableauStats"></tbody>
+    </table>
+</div>
+
+<script>
+    let fournisseurs = [];
+
+
+    function afficherMessage(texte) {
+        document.getElementById("message").textContent = texte;
+    }
+
+    function nomFournisseur(id) {
+        for (let i = 0; i < fournisseurs.length; i++) {
+            if (fournisseurs[i].id === id) {
+                return fournisseurs[i].nom;
+            }
+        }
+        return "?";
+    }
+
+    function afficherFleurs(fleurs) {
+        let html = "";
+        for (let i = 0; i < fleurs.length; i++) {
+            const f = fleurs[i];
+            html += "<tr>"
+                + "<td>" + f.nom + "</td>"
+                + "<td>" + f.couleur + "</td>"
+                + "<td>" + f.saison + "</td>"
+                + "<td>" + f.prix + " €</td>"
+                + "<td>" + f.stock + "</td>"
+                + "<td>" + (f.entretien ? f.entretien.arrosage : "") + "</td>"
+                + "<td>" + (f.entretien ? f.entretien.soleil : "") + "</td>"
+                + "<td>" + nomFournisseur(f.fournisseurId) + "</td>"
+                + "<td>"
+                + "<button onclick=\"modifier('" + f.id + "')\">Modifier</button>"
+                + "<button onclick=\"supprimer('" + f.id + "')\">Supprimer</button>"
+                + "</td>"
+                + "</tr>";
+        }
+        document.getElementById("tableauFleurs").innerHTML = html;
+    }
+
+
+    async function chargerFournisseurs() {
+        const reponse = await fetch("/fournisseurs");
+        fournisseurs = await reponse.json();
+        let options = "";
+        for (let i = 0; i < fournisseurs.length; i++) {
+            options += "<option value='" + fournisseurs[i].id + "'>" + fournisseurs[i].nom + "</option>";
+        }
+        document.getElementById("fournisseur").innerHTML = options;
+    }
+
+    async function chargerFleurs() {
+        const reponse = await fetch("/fleurs");
+        afficherFleurs(await reponse.json());
+        afficherMessage("");
+    }
+
+    async function chercherParCouleur() {
+        const couleur = document.getElementById("rechercheCouleur").value;
+        const reponse = await fetch("/fleurs/couleur?couleur=" + encodeURIComponent(couleur));
+        afficherFleurs(await reponse.json());
+    }
+
+    async function chercherParNom() {
+        const nom = document.getElementById("rechercheNom").value;
+        const reponse = await fetch("/fleurs/recherche?nom=" + encodeURIComponent(nom));
+        afficherFleurs(await reponse.json());
+    }
+
+    async function chercherParPrix() {
+        const prix = document.getElementById("recherchePrix").value;
+        const reponse = await fetch("/fleurs/prix-max?prix=" + prix);
+        afficherFleurs(await reponse.json());
+    }
+
+    async function chargerStats() {
+        const reponse = await fetch("/stats/saisons");
+        const stats = await reponse.json();
+        let html = "";
+        for (let i = 0; i < stats.length; i++) {
+            html += "<tr>"
+                + "<td>" + stats[i]._id + "</td>"
+                + "<td>" + stats[i].nbFleurs + "</td>"
+                + "<td>" + stats[i].stockTotal + "</td>"
+                + "<td>" + stats[i].prixMoyen.toFixed(2) + " €</td>"
+                + "</tr>";
+        }
+        document.getElementById("tableauStats").innerHTML = html;
+    }
+
+
+    async function enregistrer() {
+        const id = document.getElementById("idFleur").value;
+
+        const parametres = new URLSearchParams({
+            nom: document.getElementById("nom").value,
+            couleur: document.getElementById("couleur").value,
+            saison: document.getElementById("saison").value,
+            prix: document.getElementById("prix").value,
+            stock: document.getElementById("stock").value,
+            arrosage: document.getElementById("arrosage").value,
+            soleil: document.getElementById("soleil").value,
+            fournisseurId: document.getElementById("fournisseur").value
+        });
+
+        let reponse;
+        if (id === "") {
+            reponse = await fetch("/fleurs?" + parametres, {method: "POST"});       // CREATE
+        } else {
+            reponse = await fetch("/fleurs/" + id + "?" + parametres, {method: "PUT"}); // UPDATE
+        }
+
+        if (reponse.ok) {
+            viderFormulaire();
+            chargerFleurs();
+            chargerStats();
+        } else {
+            afficherMessage("Erreur : vérifie les champs (nom déjà pris ? champ vide ?)");
+        }
+    }
+
+    async function modifier(id) {
+        const reponse = await fetch("/fleurs/" + id);
+        const f = await reponse.json();
+        document.getElementById("idFleur").value = f.id;
+        document.getElementById("nom").value = f.nom;
+        document.getElementById("couleur").value = f.couleur;
+        document.getElementById("saison").value = f.saison;
+        document.getElementById("prix").value = f.prix;
+        document.getElementById("stock").value = f.stock;
+        document.getElementById("arrosage").value = f.entretien.arrosage;
+        document.getElementById("soleil").value = f.entretien.soleil;
+        document.getElementById("fournisseur").value = f.fournisseurId;
+        document.getElementById("titreFormulaire").textContent = "Modifier la fleur";
+        window.scrollTo(0, 0);
+    }
+
+    function viderFormulaire() {
+        document.getElementById("idFleur").value = "";
+        document.getElementById("nom").value = "";
+        document.getElementById("couleur").value = "";
+        document.getElementById("prix").value = "";
+        document.getElementById("stock").value = "";
+        document.getElementById("arrosage").value = "";
+        document.getElementById("soleil").value = "";
+        document.getElementById("titreFormulaire").textContent = "Ajouter une fleur";
+    }
+
+
+    async function supprimer(id) {
+        if (confirm("Supprimer cette fleur ?")) {
+            await fetch("/fleurs/" + id, {method: "DELETE"});
+            chargerFleurs();
+            chargerStats();
+        }
+    }
+
+    async function demarrer() {
+        await chargerFournisseurs();
+        chargerFleurs();
+        chargerStats();
+    }
+    demarrer();
+</script>
+
+</body>
+</html>

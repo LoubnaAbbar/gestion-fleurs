@@ -1,0 +1,451 @@
+{
+  "info": {
+    "name": "Fleurs MongoDB",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Faire d'abord GET /fleurs et GET /fournisseurs, puis copier un id dans les variables fleurId et fournisseurId (onglet Variables de la collection). Les infos sont envoyees en parametres (Params), comme dans le cours."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "fleurId",
+      "value": ""
+    },
+    {
+      "key": "fournisseurId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Fleurs - CRUD",
+      "item": [
+        {
+          "name": "Ajouter une fleur (POST)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs?nom=Iris&couleur=violet&saison=PRINTEMPS&prix=2.9&stock=70&arrosage=1 fois par semaine&soleil=Soleil&fournisseurId={{fournisseurId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs"
+              ],
+              "query": [
+                {
+                  "key": "nom",
+                  "value": "Iris"
+                },
+                {
+                  "key": "couleur",
+                  "value": "violet"
+                },
+                {
+                  "key": "saison",
+                  "value": "PRINTEMPS"
+                },
+                {
+                  "key": "prix",
+                  "value": "2.9"
+                },
+                {
+                  "key": "stock",
+                  "value": "70"
+                },
+                {
+                  "key": "arrosage",
+                  "value": "1 fois par semaine"
+                },
+                {
+                  "key": "soleil",
+                  "value": "Soleil"
+                },
+                {
+                  "key": "fournisseurId",
+                  "value": "{{fournisseurId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Toutes les fleurs (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Une fleur (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/{{fleurId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "{{fleurId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Modifier une fleur (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/{{fleurId}}?nom=Iris&couleur=violet&saison=PRINTEMPS&prix=2.9&stock=70&arrosage=1 fois par semaine&soleil=Soleil&fournisseurId={{fournisseurId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "{{fleurId}}"
+              ],
+              "query": [
+                {
+                  "key": "nom",
+                  "value": "Iris"
+                },
+                {
+                  "key": "couleur",
+                  "value": "violet"
+                },
+                {
+                  "key": "saison",
+                  "value": "PRINTEMPS"
+                },
+                {
+                  "key": "prix",
+                  "value": "2.9"
+                },
+                {
+                  "key": "stock",
+                  "value": "70"
+                },
+                {
+                  "key": "arrosage",
+                  "value": "1 fois par semaine"
+                },
+                {
+                  "key": "soleil",
+                  "value": "Soleil"
+                },
+                {
+                  "key": "fournisseurId",
+                  "value": "{{fournisseurId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Supprimer une fleur (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/{{fleurId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "{{fleurId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fleurs - requetes",
+      "item": [
+        {
+          "name": "Par couleur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/couleur?couleur=rouge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "couleur"
+              ],
+              "query": [
+                {
+                  "key": "couleur",
+                  "value": "rouge"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Par saison",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/saison?saison=ETE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "saison"
+              ],
+              "query": [
+                {
+                  "key": "saison",
+                  "value": "ETE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Prix maximum",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/prix-max?prix=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "prix-max"
+              ],
+              "query": [
+                {
+                  "key": "prix",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Recherche par nom",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/recherche?nom=ro",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "recherche"
+              ],
+              "query": [
+                {
+                  "key": "nom",
+                  "value": "ro"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Couleur ET prix max",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/couleur-prix?couleur=rouge&prixMax=4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "couleur-prix"
+              ],
+              "query": [
+                {
+                  "key": "couleur",
+                  "value": "rouge"
+                },
+                {
+                  "key": "prixMax",
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Projection (nom et prix)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/projection",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "projection"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Fournisseur de la fleur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fleurs/{{fleurId}}/fournisseur",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fleurs",
+                "{{fleurId}}",
+                "fournisseur"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fournisseurs - CRUD",
+      "item": [
+        {
+          "name": "Ajouter (POST)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fournisseurs?nom=Fleurs de Bretagne&ville=Roscoff",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fournisseurs"
+              ],
+              "query": [
+                {
+                  "key": "nom",
+                  "value": "Fleurs de Bretagne"
+                },
+                {
+                  "key": "ville",
+                  "value": "Roscoff"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tous (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fournisseurs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fournisseurs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Modifier (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fournisseurs/{{fournisseurId}}?nom=Fleurs de Bretagne&ville=Brest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fournisseurs",
+                "{{fournisseurId}}"
+              ],
+              "query": [
+                {
+                  "key": "nom",
+                  "value": "Fleurs de Bretagne"
+                },
+                {
+                  "key": "ville",
+                  "value": "Brest"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Supprimer (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fournisseurs/{{fournisseurId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fournisseurs",
+                "{{fournisseurId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistiques",
+      "item": [
+        {
+          "name": "Stats par saison (agregation)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/saisons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stats",
+                "saisons"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
